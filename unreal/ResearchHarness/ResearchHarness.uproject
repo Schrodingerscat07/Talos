@@ -1,0 +1,107 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.8",
+  "Category": "",
+  "Description": "",
+  "Plugins": [
+    {"Name": "PythonScriptPlugin", "Enabled": true},
+    {"Name": "IKRig", "Enabled": true},
+    {"Name": "ModelContextProtocol", "Enabled": true},
+    {"Name": "EditorToolset", "Enabled": true},
+    {
+      "Name": "ModelingToolsEditorMode",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
+    },
+    {
+      "Name": "MetaHuman",
+      "Enabled": true,
+      "SupportedTargetPlatforms": [
+        "Win64",
+        "Linux",
+        "Mac"
+      ]
+    },
+    {
+      "Name": "MetaHumanCalibrationDiagnostics",
+      "Enabled": true,
+      "SupportedTargetPlatforms": [
+        "Win64",
+        "Linux",
+        "Mac"
+      ]
+    },
+    {
+      "Name": "MetaHumanCalibrationProcessing",
+      "Enabled": true,
+      "SupportedTargetPlatforms": [
+        "Win64",
+        "Linux",
+        "Mac"
+      ]
+    },
+    {
+      "Name": "MetaHumanCoreTech",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanCoreML",
+      "Enabled": true,
+      "SupportedTargetPlatforms": [
+        "Mac",
+        "IOS",
+        "TVOS",
+        "VisionOS"
+      ]
+    },
+    {
+      "Name": "MetaHumanCharacter",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanCharacterUAF",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanCrowd",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanGenerator",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanLiveLink",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanRuntime",
+      "Enabled": true
+    },
+    {
+      "Name": "MetaHumanDepthProcessing",
+      "Enabled": true,
+      "SupportedTargetPlatforms": [
+        "Win64",
+        "Mac",
+        "Linux"
+      ]
+    },
+    {
+      "Enabled": true,
+      "Name": "EmbodiedResearch"
+    }
+  ],
+  "Modules": [
+    {
+      "LoadingPhase": "Default",
+      "Type": "Runtime",
+      "Name": "ResearchHarness"
+    }
+  ],
+  "AdditionalPluginDirectories": [
+    "../Plugins"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.2.0",
+  "FriendlyName": "Talos",
+  "Description": "Opt-in, versioned embodied-agent research environment.",
+  "Category": "Research",
+  "CanContainContent": true,
+  "EnabledByDefault": false,
+  "Modules": [{"Name": "EmbodiedResearch", "Type": "Runtime", "LoadingPhase": "PreDefault"}]
+}
