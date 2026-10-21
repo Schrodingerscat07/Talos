@@ -1,0 +1,449 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "id",
+    "mounts",
+    "world",
+    "avatar",
+    "control",
+    "render"
+  ],
+  "properties": {
+    "format": {
+      "const": "erl-experiment/1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+    },
+    "mounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "virtual",
+          "source"
+        ],
+        "properties": {
+          "virtual": {
+            "type": "string",
+            "pattern": "^/[A-Za-z0-9_/]+/$"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "world": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "map",
+        "spawn_cm",
+        "heading_deg",
+        "bounds_cm",
+        "overview_cm",
+        "pieces"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "home",
+            "room",
+            "layout",
+            "map"
+          ]
+        },
+        "map": {
+          "type": "string",
+          "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+        },
+        "spawn_cm": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": -10000000.0,
+            "maximum": 10000000.0
+          }
+        },
+        "heading_deg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "bounds_cm": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number",
+            "minimum": -10000000.0,
+            "maximum": 10000000.0
+          }
+        },
+        "overview_cm": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": -10000000.0,
+            "maximum": 10000000.0
+          }
+        },
+        "pieces": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "position_cm",
+              "size_cm",
+              "rotation_deg",
+              "shape",
+              "material",
+              "collision"
+            ],
+            "properties": {
+              "position_cm": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number",
+                  "minimum": -10000000.0,
+                  "maximum": 10000000.0
+                }
+              },
+              "size_cm": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number",
+                  "minimum": 0.01,
+                  "maximum": 1000000.0
+                }
+              },
+              "rotation_deg": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number",
+                  "minimum": -360,
+                  "maximum": 360
+                }
+              },
+              "shape": {
+                "enum": [
+                  "Cube",
+                  "Cylinder",
+                  "Sphere"
+                ]
+              },
+              "material": {
+                "type": "string"
+              },
+              "collision": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "avatar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "asset",
+        "body_component",
+        "offset_cm",
+        "yaw_deg",
+        "scale",
+        "capsule_radius_cm",
+        "capsule_half_height_cm",
+        "eye_offset_cm",
+        "animation"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "blueprint",
+            "skeletal_mesh"
+          ]
+        },
+        "asset": {
+          "type": "string",
+          "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+        },
+        "body_component": {
+          "type": "string",
+          "minLength": 1
+        },
+        "offset_cm": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": -10000000.0,
+            "maximum": 10000000.0
+          }
+        },
+        "yaw_deg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "scale": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": 0.001,
+            "maximum": 1000
+          }
+        },
+        "capsule_radius_cm": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "capsule_half_height_cm": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 2000
+        },
+        "eye_offset_cm": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": -10000000.0,
+            "maximum": 10000000.0
+          }
+        },
+        "animation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "clips",
+            "disable_groom_simulation"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "clips",
+                "existing",
+                "none"
+              ]
+            },
+            "clips": {
+              "type": "object"
+            },
+            "disable_groom_simulation": {
+              "type": "boolean"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "clips"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "clips": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "idle",
+                      "forward",
+                      "backward",
+                      "left",
+                      "right"
+                    ],
+                    "properties": {
+                      "idle": {
+                        "type": "string",
+                        "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+                      },
+                      "forward": {
+                        "type": "string",
+                        "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+                      },
+                      "backward": {
+                        "type": "string",
+                        "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+                      },
+                      "left": {
+                        "type": "string",
+                        "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+                      },
+                      "right": {
+                        "type": "string",
+                        "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "clips": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [],
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_steps",
+        "speed_cm_s",
+        "turn_deg_s",
+        "look_deg_s"
+      ],
+      "properties": {
+        "max_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000000
+        },
+        "speed_cm_s": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10000
+        },
+        "turn_deg_s": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10000
+        },
+        "look_deg_s": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10000
+        }
+      }
+    },
+    "render": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eye_exposure",
+        "observer_exposure",
+        "max_fps"
+      ],
+      "properties": {
+        "eye_exposure": {
+          "type": "number",
+          "minimum": -8,
+          "maximum": 8
+        },
+        "observer_exposure": {
+          "type": "number",
+          "minimum": -8,
+          "maximum": 8
+        },
+        "max_fps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        }
+      }
+    },
+    "retarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_mesh",
+        "target_mesh",
+        "source_clips",
+        "output_folder",
+        "prefix"
+      ],
+      "properties": {
+        "source_mesh": {
+          "type": "string",
+          "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+        },
+        "target_mesh": {
+          "type": "string",
+          "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+        },
+        "source_clips": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "idle",
+            "forward",
+            "backward",
+            "left",
+            "right"
+          ],
+          "properties": {
+            "idle": {
+              "type": "string",
+              "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+            },
+            "forward": {
+              "type": "string",
+              "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+            },
+            "backward": {
+              "type": "string",
+              "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+            },
+            "left": {
+              "type": "string",
+              "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+            },
+            "right": {
+              "type": "string",
+              "pattern": "^/[A-Za-z0-9_/]+(?:\\.[A-Za-z0-9_]+)?$"
+            }
+          }
+        },
+        "output_folder": {
+          "type": "string",
+          "pattern": "^/EmbodiedResearch/[A-Za-z0-9_/]+$"
+        },
+        "prefix": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:erl:experiment:1.0",
+  "title": "ERL portable experiment profile 1.0",
+  "$comment": "erl.config.validate is normative for reserved mounts, exact material aliases, capsule relationships, map suffixes and retarget output-path equality."
+}

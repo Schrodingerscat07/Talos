@@ -1,0 +1,77 @@
+{
+  "format": "erl-experiment/1.0",
+  "id": "manny_map",
+  "mounts": [
+    {
+      "virtual": "/Game/Characters/",
+      "source": "engine_templates"
+    }
+  ],
+  "world": {
+    "kind": "map",
+    "map": "/EmbodiedResearch/Worlds/FixtureLab",
+    "spawn_cm": [
+      0,
+      0,
+      89
+    ],
+    "heading_deg": 0,
+    "bounds_cm": [
+      -800,
+      -800,
+      1600,
+      1600
+    ],
+    "overview_cm": [
+      1200,
+      -1200,
+      1600
+    ],
+    "pieces": []
+  },
+  "avatar": {
+    "kind": "skeletal_mesh",
+    "asset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple",
+    "body_component": "Body",
+    "offset_cm": [
+      0,
+      0,
+      -88
+    ],
+    "yaw_deg": -90,
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "capsule_radius_cm": 34,
+    "capsule_half_height_cm": 88,
+    "eye_offset_cm": [
+      10,
+      0,
+      77
+    ],
+    "animation": {
+      "mode": "clips",
+      "disable_groom_simulation": true,
+      "clips": {
+        "idle": "/Game/Characters/Mannequins/Anims/Unarmed/MM_Idle",
+        "forward": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Fwd",
+        "backward": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Bwd",
+        "left": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Left",
+        "right": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Right"
+      }
+    }
+  },
+  "control": {
+    "max_steps": 24,
+    "speed_cm_s": 150,
+    "turn_deg_s": 90,
+    "look_deg_s": 60
+  },
+  "render": {
+    "eye_exposure": -4,
+    "observer_exposure": 0,
+    "max_fps": 30
+  }
+}

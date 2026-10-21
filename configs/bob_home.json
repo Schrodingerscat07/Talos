@@ -1,0 +1,94 @@
+{
+  "format": "erl-experiment/1.0",
+  "id": "bob_home",
+  "mounts": [
+    {
+      "virtual": "/Game/",
+      "source": "avatar"
+    },
+    {
+      "virtual": "/Game/Characters/",
+      "source": "engine_templates"
+    }
+  ],
+  "world": {
+    "kind": "home",
+    "map": "/Engine/Maps/Entry",
+    "spawn_cm": [
+      -600,
+      -130,
+      89
+    ],
+    "heading_deg": 0,
+    "bounds_cm": [
+      -1400,
+      -1250,
+      2800,
+      2500
+    ],
+    "overview_cm": [
+      -1800,
+      2600,
+      2600
+    ],
+    "pieces": []
+  },
+  "avatar": {
+    "kind": "blueprint",
+    "asset": "/Game/MetaHumans/bob/BP_bob.BP_bob_C",
+    "body_component": "Body",
+    "offset_cm": [
+      0,
+      0,
+      -88
+    ],
+    "yaw_deg": -90,
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "capsule_radius_cm": 34,
+    "capsule_half_height_cm": 88,
+    "eye_offset_cm": [
+      10,
+      0,
+      77
+    ],
+    "animation": {
+      "mode": "clips",
+      "disable_groom_simulation": true,
+      "clips": {
+        "idle": "/EmbodiedResearch/Animation/Bob_MM_Idle",
+        "forward": "/EmbodiedResearch/Animation/Bob_MF_Unarmed_Walk_Fwd",
+        "backward": "/EmbodiedResearch/Animation/Bob_MF_Unarmed_Walk_Bwd",
+        "left": "/EmbodiedResearch/Animation/Bob_MF_Unarmed_Walk_Left",
+        "right": "/EmbodiedResearch/Animation/Bob_MF_Unarmed_Walk_Right"
+      }
+    }
+  },
+  "control": {
+    "max_steps": 500,
+    "speed_cm_s": 150,
+    "turn_deg_s": 90,
+    "look_deg_s": 60
+  },
+  "render": {
+    "eye_exposure": -4,
+    "observer_exposure": -2,
+    "max_fps": 30
+  },
+  "retarget": {
+    "source_mesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple",
+    "target_mesh": "/Game/MetaHumans/bob/Body/SKM_bob_BodyMesh",
+    "source_clips": {
+      "idle": "/Game/Characters/Mannequins/Anims/Unarmed/MM_Idle",
+      "forward": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Fwd",
+      "backward": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Bwd",
+      "left": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Left",
+      "right": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Right"
+    },
+    "output_folder": "/EmbodiedResearch/Animation",
+    "prefix": "Bob_"
+  }
+}
