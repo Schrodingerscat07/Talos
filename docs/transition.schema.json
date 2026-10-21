@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:erl:transition:1.0",
+  "title": "ERL 1.0 wire transition (before recorder image extraction)",
+  "type": "object",
+  "required": ["protocol", "episode_id", "step_index", "sim_time_s", "reward", "terminated", "truncated", "observation", "privileged"],
+  "additionalProperties": false,
+  "properties": {
+    "protocol": {"const": "erl/1.0"},
+    "episode_id": {"type": "string", "minLength": 1},
+    "step_index": {"type": "integer", "minimum": 0, "maximum": 10000000},
+    "sim_time_s": {"type": "number", "minimum": 0},
+    "reward": {"const": 0},
+    "terminated": {"const": false},
+    "truncated": {"type": "boolean"},
+    "observation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rgb", "proprioception", "contacts"],
+      "properties": {
+        "rgb": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/ego_image"}]},
+        "proprioception": {
+          "type": "object", "additionalProperties": false,
+          "required": ["heading_deg", "look_pitch_deg", "local_velocity_cm_s"],
+          "properties": {
+            "heading_deg": {"type": "number", "minimum": -180, "maximum": 180},
+            "look_pitch_deg": {"type": "number", "minimum": -70, "maximum": 70},
+            "local_velocity_cm_s": {"$ref": "#/$defs/vector"}
+          }
+        },
+        "contacts": {
+          "type": "object", "additionalProperties": false, "required": ["blocked"],
+          "properties": {"blocked": {"type": "boolean"}}
+        }
+      }
+    },
+    "privileged": {
+      "type": "object", "additionalProperties": false,
+      "required": ["position_cm", "obstacle_position_cm", "seed"],
+      "properties": {
+        "position_cm": {"$ref": "#/$defs/vector"},
+        "obstacle_position_cm": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/vector"}]},
+        "animation_state": {"type": "string"},
+        "gait_phase_s": {"type": "number", "minimum": 0},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 2147483647},
+        "last_hit_actor": {"type": "string"},
+        "observer_rgb": {
+          "type": "object", "additionalProperties": false,
+          "required": ["encoding", "width", "height", "data"],
+          "properties": {"encoding": {"const": "png_base64"}, "width": {"const": 640}, "height": {"const": 480}, "data": {"type": "string", "contentEncoding": "base64", "contentMediaType": "image/png"}}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "vector": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+    "ego_image": {
+      "type": "object", "additionalProperties": false,
+      "required": ["encoding", "width", "height", "data"],
+      "properties": {"encoding": {"const": "png_base64"}, "width": {"const": 160}, "height": {"const": 120}, "data": {"type": "string", "contentEncoding": "base64", "contentMediaType": "image/png"}}
+    }
+  }
+}
