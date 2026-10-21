@@ -1,0 +1,45 @@
+__pycache__/
+*.py[cod]
+.venv/
+.firecrawl/
+runs/
+local/
+**/Binaries/
+**/Intermediate/
+**/Saved/
+**/DerivedDataCache/
+.vs/
+*.sln
+# Generated engine assets include private Bob skeleton references; rebuild locally.
+unreal/Plugins/EmbodiedResearch/Content/
+
+# Local environment/secrets and packaging products.
+.env
+.env.*
+!.env.example
+*.token
+*.pem
+*.key
+*.pfx
+*.p12
+*.log
+*.zip
+*.egg-info/
+build/
+dist/
+
+# External/licensed source assets and generated Unreal content stay local.
+**/Content/
+*.uasset
+*.umap
+*.ubulk
+*.uexp
+*.blend
+*.fbx
+
+# Original workstation history includes private paths and local-only evidence.
+docs/RESUME.md
+docs/GATE_DECISIONS.md
+docs/PHASE1_STATUS.md
+docs/PHASE2A_STATUS.md
+docs/HUMAN_REVIEW.md
