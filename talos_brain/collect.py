@@ -22,9 +22,12 @@ import time
 import numpy as np
 
 from .env import IMAGE_HW, TalosEnv
-from .expert import CrateTeacher
+from .expert import TEACHERS, make_teacher
 from .policies import make_policy
-from .tasks import TASKS, TRAIN_SEEDS
+from .tasks import TASKS, TRAIN_SEEDS, resolve_targets
+
+
+TARGETS = None   # set from --layout in main(); used by workers
 
 
 def make_clients(args):
@@ -36,10 +39,10 @@ def make_clients(args):
 
 
 def run_worker(i, client, seeds, args, out, lock, stats):
-    teacher = CrateTeacher()
+    teacher = make_teacher(args.task, TARGETS)
     student = make_policy(args.student_kind, args.student) if args.student else None
     rng = np.random.default_rng(10_000 + i + args.seed_offset)
-    env = TalosEnv(client, TASKS[args.task](), seeds, max_episode_steps=args.max_episode_steps)
+    env = TalosEnv(client, TASKS[args.task](**({"targets_cm": TARGETS} if args.task == "two" else {})), seeds, max_episode_steps=args.max_episode_steps)
     for _ in range(len(seeds)):
         img, pro = env.reset()
         teacher.reset()
@@ -84,9 +87,14 @@ def main():
     p.add_argument("--student", help="checkpoint for DAgger rounds")
     p.add_argument("--student-kind", default="brain", choices=["brain", "sk"])
     p.add_argument("--beta", type=float, default=0.3, help="probability an episode is driven by the teacher")
+    p.add_argument("--layout", help="two-target world layout name from configs/two_layouts.json (must match the running world)")
     p.add_argument("--out", required=True)
     args = p.parse_args()
 
+    global TARGETS
+    TARGETS = resolve_targets(args.layout) if args.task == "two" else None
+    if args.task not in TEACHERS:
+        raise SystemExit(f"no teacher for task {args.task}; choose one of {list(TEACHERS)}")
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     clients = make_clients(args)
     seeds = TRAIN_SEEDS[args.seed_offset:args.seed_offset + args.episodes]
@@ -94,7 +102,7 @@ def main():
         raise SystemExit("not enough training seeds left; lower --seed-offset/--episodes")
     (out / "collection.json").write_text(json.dumps({
         "created": datetime.now(timezone.utc).isoformat(), "args": vars(args), "image_hw": IMAGE_HW,
-        "teacher": CrateTeacher.name, "teacher_uses_privileged": ["position_cm", "obstacle_position_cm"],
+        "teacher": TEACHERS[args.task].name, "task": args.task, "layout": args.layout, "targets_cm": TARGETS, "teacher_uses_privileged": ["position_cm", "obstacle_position_cm (reach) or fixed target positions (two)"],
         "start_pose": "scripted pre-roll randomisation (talos_brain.env.preroll_actions)",
         "seeds": [seeds[0], seeds[-1]], "note": "Demonstrations from a privileged scripted teacher; record in any claim.",
     }, indent=2))

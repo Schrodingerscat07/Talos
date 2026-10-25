@@ -11,9 +11,9 @@ ACTION_DIM = 4  # forward, strafe, turn, look
 
 
 class Brain(nn.Module):
-    def __init__(self, hidden: int = 256, image_hw=IMAGE_HW):
+    def __init__(self, hidden: int = 256, image_hw=IMAGE_HW, proprio_dim: int = PROPRIO_DIM):
         super().__init__()
-        self.hidden, self.image_hw = hidden, tuple(image_hw)
+        self.hidden, self.image_hw, self.proprio_dim = hidden, tuple(image_hw), proprio_dim
         conv = nn.Sequential(
             nn.Conv2d(3, 32, 5, stride=2, padding=2), nn.ReLU(),   # 60x80 -> 30x40
             nn.Conv2d(32, 64, 3, stride=2, padding=1), nn.ReLU(),  # -> 15x20
@@ -23,7 +23,7 @@ class Brain(nn.Module):
         with torch.no_grad():
             flat = conv(torch.zeros(1, 3, *self.image_hw)).shape[1]
         self.vision = nn.Sequential(conv, nn.Linear(flat, 256), nn.ReLU())
-        self.body = nn.Sequential(nn.Linear(PROPRIO_DIM, 64), nn.ReLU())
+        self.body = nn.Sequential(nn.Linear(proprio_dim, 64), nn.ReLU())
         self.memory = nn.GRU(256 + 64, hidden)
         self.actor = nn.Linear(hidden, ACTION_DIM)
         self.critic = nn.Linear(hidden, 1)

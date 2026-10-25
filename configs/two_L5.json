@@ -1,0 +1,218 @@
+{
+  "format": "erl-experiment/1.0",
+  "id": "manny_two_l5",
+  "mounts": [
+    {
+      "virtual": "/Game/Characters/",
+      "source": "engine_templates"
+    }
+  ],
+  "world": {
+    "kind": "layout",
+    "map": "/Engine/Maps/Entry",
+    "spawn_cm": [
+      0,
+      0,
+      89
+    ],
+    "heading_deg": 0,
+    "bounds_cm": [
+      -900,
+      -700,
+      1800,
+      1400
+    ],
+    "overview_cm": [
+      1300,
+      -1400,
+      1600
+    ],
+    "pieces": [
+      {
+        "position_cm": [
+          0,
+          0,
+          -15
+        ],
+        "size_cm": [
+          1600,
+          1200,
+          30
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Stone",
+        "collision": true
+      },
+      {
+        "position_cm": [
+          800,
+          0,
+          150
+        ],
+        "size_cm": [
+          20,
+          1200,
+          300
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Plaster",
+        "collision": true
+      },
+      {
+        "position_cm": [
+          -800,
+          0,
+          150
+        ],
+        "size_cm": [
+          20,
+          1200,
+          300
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Plaster",
+        "collision": true
+      },
+      {
+        "position_cm": [
+          0,
+          -600,
+          150
+        ],
+        "size_cm": [
+          1600,
+          20,
+          300
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Plaster",
+        "collision": true
+      },
+      {
+        "position_cm": [
+          0,
+          600,
+          150
+        ],
+        "size_cm": [
+          1600,
+          20,
+          300
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Plaster",
+        "collision": true
+      },
+      {
+        "position_cm": [
+          -350,
+          200,
+          50
+        ],
+        "size_cm": [
+          100,
+          100,
+          100
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Terracotta",
+        "collision": true
+      },
+      {
+        "position_cm": [
+          250,
+          -350,
+          50
+        ],
+        "size_cm": [
+          100,
+          100,
+          100
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "shape": "Cube",
+        "material": "Blue",
+        "collision": true
+      }
+    ]
+  },
+  "avatar": {
+    "kind": "skeletal_mesh",
+    "asset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple",
+    "body_component": "Body",
+    "offset_cm": [
+      0,
+      0,
+      -88
+    ],
+    "yaw_deg": -90,
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "capsule_radius_cm": 34,
+    "capsule_half_height_cm": 88,
+    "eye_offset_cm": [
+      10,
+      0,
+      77
+    ],
+    "animation": {
+      "mode": "clips",
+      "disable_groom_simulation": true,
+      "clips": {
+        "idle": "/Game/Characters/Mannequins/Anims/Unarmed/MM_Idle",
+        "forward": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Fwd",
+        "backward": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Bwd",
+        "left": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Left",
+        "right": "/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Right"
+      }
+    }
+  },
+  "control": {
+    "max_steps": 300,
+    "speed_cm_s": 150,
+    "turn_deg_s": 90,
+    "look_deg_s": 60
+  },
+  "render": {
+    "eye_exposure": -2,
+    "observer_exposure": -2,
+    "max_fps": 30
+  }
+}

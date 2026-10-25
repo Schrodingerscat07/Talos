@@ -1,0 +1,33 @@
+{
+  "created": "2026-10-24T18:09:34.408436+00:00",
+  "args": {
+    "backend": "mock",
+    "instances": "trial",
+    "mock_count": 2,
+    "task": "reach",
+    "episodes": 300,
+    "max_episode_steps": 150,
+    "seed_offset": 0,
+    "noise_prob": 0.3,
+    "noise_std": 0.5,
+    "student": null,
+    "student_kind": "brain",
+    "beta": 0.3,
+    "out": "data/mock0"
+  },
+  "image_hw": [
+    60,
+    80
+  ],
+  "teacher": "teacher_search_right_then_approach_v1",
+  "teacher_uses_privileged": [
+    "position_cm",
+    "obstacle_position_cm"
+  ],
+  "start_pose": "scripted pre-roll randomisation (talos_brain.env.preroll_actions)",
+  "seeds": [
+    0,
+    299
+  ],
+  "note": "Demonstrations from a privileged scripted teacher; record in any claim."
+}

@@ -8,7 +8,7 @@ import pickle
 
 import numpy as np
 
-from .expert import CrateTeacher
+from .expert import make_teacher
 
 
 class RandomPolicy:
@@ -58,7 +58,7 @@ class TorchPolicy:
         from .model import Brain
         state = torch.load(path, map_location=device, weights_only=False)
         self.torch, self.dev = torch, device
-        self.brain = Brain(image_hw=tuple(state.get("image_hw", (60, 80)))).to(device)
+        self.brain = Brain(image_hw=tuple(state.get("image_hw", (60, 80))), proprio_dim=state.get("proprio_dim", 7)).to(device)
         self.brain.load_state_dict(state["model"]); self.brain.eval()
         self.name = "brain_" + state.get("kind", "ppo")
     def reset(self):
@@ -73,10 +73,10 @@ class TorchPolicy:
         return dist.mean[0, 0].cpu().numpy()
 
 
-def make_policy(name: str, checkpoint: str | None = None):
+def make_policy(name: str, checkpoint: str | None = None, task: str = "reach", targets=None):
     if name == "random": return RandomPolicy()
     if name in ("forward", "scripted"): return ForwardPolicy()
-    if name == "teacher": return CrateTeacher()
+    if name == "teacher": return make_teacher(task, targets)
     if name == "sk": return SkPolicy(checkpoint)
     if name in ("brain", "trained"): return TorchPolicy(checkpoint)
     raise ValueError(f"unknown policy {name}")

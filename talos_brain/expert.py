@@ -29,10 +29,8 @@ class CrateTeacher:
     def reset(self):
         pass
 
-    def act(self, img, pro, transition) -> np.ndarray:
-        priv = transition["privileged"]
-        target = priv["obstacle_position_cm"]
-        x, y, _ = priv["position_cm"]
+    def _steer(self, target, transition) -> np.ndarray:
+        x, y = transition["privileged"]["position_cm"][:2]
         heading = transition["observation"]["proprioception"]["heading_deg"]
         bearing = math.degrees(math.atan2(target[1] - y, target[0] - x))
         err = wrap180(bearing - heading)
@@ -41,3 +39,27 @@ class CrateTeacher:
         turn = float(np.clip(err / self.turn_deg_per_step, -1, 1))
         forward = 1.0 if abs(err) < 15 else 0.5
         return np.array([forward, 0.0, turn, 0.0])
+
+    def act(self, img, pro, transition) -> np.ndarray:
+        return self._steer(transition["privileged"]["obstacle_position_cm"], transition)
+
+
+class TargetTeacher(CrateTeacher):
+    """Same behaviour, but the target is the box named by the instruction (last two entries of `pro`)."""
+    name = "teacher_two_target_v1"
+
+    def __init__(self, targets=None, **kw):
+        super().__init__(**kw)
+        from .tasks import TARGETS_CM
+        self.targets = targets or TARGETS_CM
+
+    def act(self, img, pro, transition) -> np.ndarray:
+        return self._steer(self.targets[int(np.argmax(pro[-2:]))], transition)
+
+
+TEACHERS = {"reach": CrateTeacher, "two": TargetTeacher}
+
+
+def make_teacher(task: str, targets=None):
+    cls = TEACHERS[task]
+    return cls(targets=targets) if cls is TargetTeacher else cls()

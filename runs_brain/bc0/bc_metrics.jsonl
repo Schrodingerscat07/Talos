@@ -1,0 +1,15 @@
+{"epoch": 1, "train_mse": 0.18367, "val_mse": 0.11238, "seconds": 2.1}
+{"epoch": 2, "train_mse": 0.11171, "val_mse": 0.10614, "seconds": 1.2}
+{"epoch": 3, "train_mse": 0.08734, "val_mse": 0.05638, "seconds": 1.2}
+{"epoch": 4, "train_mse": 0.03519, "val_mse": 0.02632, "seconds": 1.2}
+{"epoch": 5, "train_mse": 0.01976, "val_mse": 0.01767, "seconds": 1.2}
+{"epoch": 6, "train_mse": 0.01391, "val_mse": 0.01268, "seconds": 1.2}
+{"epoch": 7, "train_mse": 0.01079, "val_mse": 0.01211, "seconds": 1.2}
+{"epoch": 8, "train_mse": 0.00946, "val_mse": 0.01099, "seconds": 1.2}
+{"epoch": 9, "train_mse": 0.0077, "val_mse": 0.00889, "seconds": 1.2}
+{"epoch": 10, "train_mse": 0.00653, "val_mse": 0.00813, "seconds": 1.2}
+{"epoch": 11, "train_mse": 0.006, "val_mse": 0.00738, "seconds": 1.2}
+{"epoch": 12, "train_mse": 0.00534, "val_mse": 0.00674, "seconds": 1.2}
+{"epoch": 13, "train_mse": 0.00467, "val_mse": 0.0059, "seconds": 1.2}
+{"epoch": 14, "train_mse": 0.00411, "val_mse": 0.00544, "seconds": 1.2}
+{"epoch": 15, "train_mse": 0.00372, "val_mse": 0.00441, "seconds": 1.2}

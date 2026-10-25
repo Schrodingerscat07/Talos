@@ -148,5 +148,36 @@ class Cli(unittest.TestCase):
         self.assertEqual([r["instances"] for r in report["results"]], [1, 2])
 
 
+class TwoTarget(unittest.TestCase):
+    def test_instruction_follows_seed_and_reaches_correct_box(self):
+        from talos_brain.tasks import TARGETS_CM, TwoTargetTask
+        t = TwoTargetTask(); t.configure(100000); self.assertEqual(t.target_index, 0)
+        t.configure(100001); self.assertEqual(list(t.instruction), [0.0, 1.0])
+        tx, ty = TARGETS_CM[1]
+        t.reset(fake_transition(0, 0))
+        _, done, info = t.reward(fake_transition(tx - 100, ty))
+        self.assertTrue(done and info["success"] and not info["reached_wrong"])
+
+    def test_reaching_the_other_box_is_a_failure(self):
+        from talos_brain.tasks import TARGETS_CM, TwoTargetTask
+        t = TwoTargetTask(); t.configure(0)
+        t.reset(fake_transition(0, 0))
+        tx, ty = TARGETS_CM[1]
+        _, done, info = t.reward(fake_transition(tx - 100, ty))
+        self.assertTrue(done and not info["success"] and info["reached_wrong"])
+
+    def test_env_appends_instruction_and_teacher_obeys_it(self):
+        from talos_brain.expert import TargetTeacher
+        from talos_brain.tasks import TwoTargetTask
+        env = TalosEnv(MockClient(), TwoTargetTask(), [0, 1], max_episode_steps=20)
+        img, pro = env.reset()
+        self.assertEqual(pro.shape, (PROPRIO_DIM + 2,)); self.assertEqual(list(pro[-2:]), [1.0, 0.0])
+        teacher = TargetTeacher()
+        tr = fake_transition(0, 0)
+        tr["observation"]["proprioception"]["heading_deg"] = math.degrees(math.atan2(-240, 330))
+        self.assertGreater(teacher.act(img, np.array([0.0] * 7 + [1.0, 0.0]), tr)[0], 0.4)      # terracotta is ahead
+        self.assertEqual(teacher.act(img, np.array([0.0] * 7 + [0.0, 1.0]), tr)[2], 1.0)         # blue is behind: search turn
+
+
 if __name__ == "__main__":
     unittest.main()

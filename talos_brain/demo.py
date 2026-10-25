@@ -7,6 +7,7 @@ scripted start-pose pre-roll; the manifest says so. Use held-out seeds so the de
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 from pathlib import Path
 
@@ -15,7 +16,7 @@ from erl.recorder import Recorder
 
 from .evaluate import run_policy, summarise
 from .policies import make_policy
-from .tasks import EVAL_SEEDS
+from .tasks import EVAL_SEEDS, resolve_targets
 
 
 def provenance(policy, checkpoint, instance, backend):
@@ -42,7 +43,7 @@ class EpisodeRecorder:
     def __call__(self, transition, action):
         if transition["step_index"] == 0:
             self.close()
-            self.rec = Recorder(self.root, self.spec, transition["privileged"]["seed"], self.prov)
+            self.rec = Recorder(self.root, self.spec, transition["privileged"]["seed"], copy.deepcopy(self.prov))
             self.paths.append(self.rec.path)
         self.rec.append(transition, action)
 
@@ -59,6 +60,7 @@ def main():
     p.add_argument("--checkpoint")
     p.add_argument("--task", default="reach")
     p.add_argument("--episodes", type=int, default=5)
+    p.add_argument("--layout", help="two-target layout name (must match the running world)")
     p.add_argument("--first-seed-index", type=int, default=0, help="index into the held-out EVAL_SEEDS")
     p.add_argument("--runs", default=str(ROOT / "runs" / "brain_demo"))
     args = p.parse_args()
@@ -66,11 +68,13 @@ def main():
         from .mock_sim import MockClient; client = MockClient()
     else:
         from erl.manage import client_for; client = client_for(args.instances.split(",")[0])
-    policy = make_policy(args.policy, args.checkpoint)
+    targets = resolve_targets(args.layout) if args.task == "two" else None
+    policy = make_policy(args.policy, args.checkpoint, args.task, targets)
     recorder = EpisodeRecorder(Path(args.runs), client.spec(), provenance(policy, args.checkpoint, args.instances, args.backend))
     seeds = EVAL_SEEDS[args.first_seed_index:args.first_seed_index + args.episodes]
     try:
-        rows = run_policy(client, policy, args.task, seeds, on_transition=recorder)
+        rows = run_policy(client, policy, args.task, seeds, on_transition=recorder,
+                          task_kwargs={"targets_cm": targets} if targets else None)
     except BaseException as exc:
         recorder.close(str(exc)); raise
     recorder.close()

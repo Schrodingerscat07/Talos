@@ -114,7 +114,73 @@ class ReachCrateTask:
         return r, done, {"distance_cm": d, "success": done}
 
 
+# Target boxes of configs/manny_two_targets.json (centre x, y in cm): index 0 = Terracotta, 1 = Blue.
+TARGETS_CM = ((330.0, -240.0), (330.0, 240.0))
+TARGET_NAMES = ("terracotta", "blue")
+
+
+def resolve_targets(layout=None):
+    """Target (x, y) pairs for a named layout in configs/two_layouts.json; None = the original TARGETS_CM."""
+    if not layout:
+        return TARGETS_CM
+    import json
+    from pathlib import Path
+    table = json.loads((Path(__file__).resolve().parents[1] / "configs" / "two_layouts.json").read_text())
+    if layout not in table:
+        raise SystemExit(f"unknown layout {layout}; choose from {sorted(table)}")
+    return (tuple(table[layout]["terracotta"]), tuple(table[layout]["blue"]))
+
+
+@dataclass
+class TwoTargetTask:
+    """Go to the box named by an instruction. The instruction is a one-hot the brain sees (appended to proprioception).
+
+    Each episode's target is chosen client-side from the seed (even = terracotta, odd = blue), so the world can stay
+    static. Reaching the OTHER box ends the episode as a failure and is reported as `reached_wrong`.
+    Needs configs/manny_two_targets.json (or any world with boxes at TARGETS_CM). Uses privileged positions for
+    reward only; the policy never sees them.
+    """
+    reach_cm: float = 130.0
+    success_reward: float = 10.0
+    wrong_penalty: float = 1.0
+    progress_scale: float = 0.01
+    step_penalty: float = 0.005
+    targets_cm: tuple = TARGETS_CM
+    name: str = "two_target_v1"
+    uses_privileged: tuple = ("position_cm",)
+    target_index: int = 0
+    _last: float = 0.0
+
+    @property
+    def instruction(self):
+        import numpy as np
+        v = np.zeros(2, dtype=np.float32); v[self.target_index] = 1.0
+        return v
+
+    def configure(self, seed: int) -> None:
+        self.target_index = int(seed) % 2
+
+    def _dist(self, transition: dict, index: int) -> float:
+        x, y, _ = transition["privileged"]["position_cm"]
+        tx, ty = self.targets_cm[index]
+        return math.hypot(x - tx, y - ty)
+
+    def reset(self, transition: dict) -> None:
+        self._last = self._dist(transition, self.target_index)
+
+    def reward(self, transition: dict) -> tuple[float, bool, dict]:
+        d = self._dist(transition, self.target_index)
+        other = self._dist(transition, 1 - self.target_index)
+        r = (self._last - d) * self.progress_scale - self.step_penalty
+        self._last = d
+        if d < self.reach_cm:
+            return r + self.success_reward, True, {"distance_cm": d, "success": True, "reached_wrong": False}
+        if other < self.reach_cm:
+            return r - self.wrong_penalty, True, {"distance_cm": d, "success": False, "reached_wrong": True}
+        return r, False, {"distance_cm": d, "success": False, "reached_wrong": False}
+
+
 TRAIN_SEEDS = list(range(0, 1000))       # training layouts
 EVAL_SEEDS = list(range(100000, 100050))  # held out: never used in training
 
-TASKS = {"explore": ExploreTask, "goal": GoalTask, "reach": ReachCrateTask}
+TASKS = {"explore": ExploreTask, "goal": GoalTask, "reach": ReachCrateTask, "two": TwoTargetTask}

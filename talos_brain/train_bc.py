@@ -48,8 +48,8 @@ def run_epoch(brain, episodes, dev, batch_size, opt=None, rng=None):
             if opt is not None:
                 opt.zero_grad(); loss.backward()
                 torch.nn.utils.clip_grad_norm_(brain.parameters(), 1.0); opt.step()
-        total += loss.item() * mask.sum(); count += mask.sum()
-    return total / count
+        total += float(loss.item() * mask.sum()); count += float(mask.sum())
+    return float(total / count)
 
 
 def main():
@@ -69,7 +69,8 @@ def main():
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     train, val = split_by_seed(load_episodes(args.data))
     hw = tuple(train[0]["images"].shape[2:])
-    brain = Brain(image_hw=hw).to(dev)
+    pdim = int(train[0]["proprio"].shape[1])
+    brain = Brain(image_hw=hw, proprio_dim=pdim).to(dev)
     if args.init:
         brain.load_state_dict(torch.load(args.init, map_location=dev, weights_only=False)["model"])
     opt = torch.optim.Adam(brain.parameters(), lr=args.lr)
@@ -90,7 +91,7 @@ def main():
         log.write(json.dumps(row) + "\n"); log.flush(); print(row, flush=True)
         if va < best:
             best = va
-            torch.save({"model": brain.state_dict(), "kind": "bc", "image_hw": hw, "epoch": epoch, "val_mse": va}, out / "brain.pt")
+            torch.save({"model": brain.state_dict(), "kind": "bc", "image_hw": hw, "proprio_dim": pdim, "epoch": epoch, "val_mse": va}, out / "brain.pt")
     print(f"best val_mse {best:.5f} -> {out / 'brain.pt'}")
 
 

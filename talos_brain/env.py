@@ -85,6 +85,8 @@ class TalosEnv:
     def reset(self):
         self.seed = self.seeds[self._episode % len(self.seeds)]
         self._episode += 1
+        if hasattr(self.task, "configure"):
+            self.task.configure(self.seed)
         t = self.client.reset(seed=self.seed)
         self._emit(t)
         if self.randomize_start:
@@ -93,7 +95,14 @@ class TalosEnv:
                 self._emit(t, a)
         self.task.reset(t)
         self.episode_return, self.episode_length = 0.0, 0
-        return encode_observation(t["observation"], self.hw)
+        return self._observe(t)
+
+    def _observe(self, t):
+        img, pro = encode_observation(t["observation"], self.hw)
+        instruction = getattr(self.task, "instruction", None)
+        if instruction is not None:      # tasks with a goal instruction show it to the policy as extra body input
+            pro = np.concatenate([pro, instruction]).astype(np.float32)
+        return img, pro
 
     def step(self, action_vec):
         a = np.clip(np.asarray(action_vec, dtype=float), -1, 1)
@@ -108,7 +117,7 @@ class TalosEnv:
         info.update(truncated=(t["truncated"] or capped) and not task_done)
         if done:
             info["episode"] = {"return": self.episode_return, "length": self.episode_length, "seed": self.seed}
-        return encode_observation(t["observation"], self.hw), reward, done, info
+        return self._observe(t), reward, done, info
 
 
 class VecEnv:
