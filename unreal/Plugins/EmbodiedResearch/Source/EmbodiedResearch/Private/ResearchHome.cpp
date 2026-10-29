@@ -275,6 +275,7 @@ void AResearchEnvironment::UpdateAnimation()
     auto* Anim=AnimatedBody->GetSingleNodeInstance();
     if(!Anim) return;
     if(Anim->GetAnimationAsset()!=Locomotion[Index]) Anim->SetAnimationAsset(Locomotion[Index],true,0.f);
+    if(MotorAnim) GaitPhase=0;
     Anim->SetPosition(FMath::Fmod(GaitPhase,Locomotion[Index]->GetPlayLength()),false);
     Anim->SetPlaying(false);
     AnimatedBody->TickAnimation(0,false);

@@ -18,6 +18,7 @@ class FJsonObject;
 class UInstancedStaticMeshComponent;
 class USkeletalMeshComponent;
 class UAnimSequence;
+class UResearchMotorAnim;
 
 UCLASS()
 class EMBODIEDRESEARCH_API AResearchEnvironment : public AActor
@@ -40,6 +41,14 @@ private:
     UPROPERTY() TMap<FString,TObjectPtr<UInstancedStaticMeshComponent>> Pieces;
     UPROPERTY() TObjectPtr<USkeletalMeshComponent> AnimatedBody;
     UPROPERTY() TArray<TObjectPtr<UAnimSequence>> Locomotion;
+    UPROPERTY() TObjectPtr<UResearchMotorAnim> MotorAnim;
+    TSharedPtr<FJsonObject> MotorMapping;
+    FString MotorError;
+    TArray<FQuat> MotorNeutral;
+    bool bMotorRequested = false;
+    void SetupMotor();
+    TSharedRef<FJsonObject> DescribeMotor() const;
+    bool ApplyMotor(const TSharedPtr<FJsonObject>& Data, FString& Error, int32& Code);
     FString WorldName = TEXT("home");
     FString AnimationState = TEXT("unavailable");
     float GaitPhase = 0;
@@ -72,6 +81,7 @@ private:
     AActor* AddBlock(const FVector& Position, const FVector& Size, const FString& Label);
     void ResetState(int32 InSeed);
     TSharedRef<FJsonObject> Describe() const;
+    TSharedRef<FJsonObject> DescribeRig() const;
     TSharedRef<FJsonObject> Observe();
     bool Handle(const FHttpServerRequest& Request, const FHttpResultCallback& Complete, const FString& Operation);
 };
