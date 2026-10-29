@@ -14,7 +14,7 @@ def build(output):
     suffixes={'.py','.ps1','.cjs','.json','.md','.h','.cpp','.cs','.ini'}
     for name in directories:
         files.extend(p for p in (ROOT/name).rglob('*') if p.is_file() and p.suffix in suffixes and '__pycache__' not in p.parts)
-    files+=[ROOT/'unreal/Plugins/EmbodiedResearch/EmbodiedResearch.uplugin',ROOT/'docs/PROTOCOL.md',ROOT/'docs/transition.schema.json',ROOT/'docs/WORLD.md',ROOT/'docs/PHASES.md']
+    files+=[ROOT/'unreal/Plugins/EmbodiedResearch/EmbodiedResearch.uplugin',ROOT/'docs/PROTOCOL.md',ROOT/'docs/transition.schema.json',ROOT/'docs/WORLD.md',ROOT/'docs/PHASES.md',ROOT/'docs/MOTOR_CONTROL.md']
     entries=[];output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED) as archive:
         for file in sorted(set(files)):

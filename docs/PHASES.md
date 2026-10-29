@@ -1,5 +1,20 @@
 # Phases and human verification gates
 
+## Current motor-control increment
+
+On 2026-10-29 the owner requested detailed body, individual-finger and facial
+control before further brain development. The implementation sequence and
+acceptance checks are in [MOTOR_CONTROL.md](MOTOR_CONTROL.md). Initial live rig
+discovery is verified structurally; this does not pass an actuator or visual
+gate. Body/hand, facial and integrated-control demonstrations each need human
+review before advancing to the next motor milestone. Earlier phase acceptance
+is not inferred from this new work request.
+
+2026-10-30: the owner explicitly authorized proceeding from M0 with a reusable
+mapping for future MetaHumans. M1a (left index proximal joint and wrist) now has
+rendered automated evidence and a recorded human walkthrough. Its human visual
+PASS remains pending; full hands/body/face have not been verified.
+
 Each phase produces runnable artifacts, automated evidence, known limitations, a human walkthrough, and an explicit pass/fail decision. Automated checks alone never approve a phase. Later features must not begin until the human accepts the preceding gate. Passing a gate reduces risk; it does not guarantee that later integration cannot expose problems. New failures reopen affected gates.
 
 ## Phase 1 — Simulation and research interfaces

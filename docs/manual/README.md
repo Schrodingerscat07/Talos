@@ -4,6 +4,12 @@ This manual describes the implemented **ERL 0.2.0** foundation. It covers config
 
 Start with [Installation and first run](01-installation.md), then [Configuration reference](02-configuration.md). To replace the character, follow [Avatar and Blender integration](03-avatars.md). To replace the scene, follow [World authoring](04-worlds.md).
 
+For the new body, individual-finger and facial-control work, see the
+[motor control implementation and verification plan](../MOTOR_CONTROL.md).
+Its current delivered features are rig discovery and the opt-in two-channel
+finger/wrist diagnostic. Rendered Bob checks passed; human acceptance and broader
+body/facial controls remain pending.
+
 | Guide | Purpose |
 | --- | --- |
 | [01 — Installation](01-installation.md) | Dependencies, a Bob-free first run, private machine setup, build/prepare/launch order |
