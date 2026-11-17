@@ -1,0 +1,611 @@
+{
+  "format": "talos-motor-map/1.0",
+  "body_component": "Body",
+  "channels": [
+    {
+      "name": "left_thumb_01",
+      "bone": "thumb_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_thumb_02",
+      "bone": "thumb_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_thumb_03",
+      "bone": "thumb_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_index_01",
+      "bone": "index_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_index_02",
+      "bone": "index_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_index_03",
+      "bone": "index_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_middle_01",
+      "bone": "middle_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_middle_02",
+      "bone": "middle_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_middle_03",
+      "bone": "middle_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ring_01",
+      "bone": "ring_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ring_02",
+      "bone": "ring_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ring_03",
+      "bone": "ring_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_pinky_01",
+      "bone": "pinky_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_pinky_02",
+      "bone": "pinky_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_pinky_03",
+      "bone": "pinky_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_wrist",
+      "bone": "hand_l",
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "limit_deg": 25,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_thumb_01",
+      "bone": "thumb_01_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_thumb_02",
+      "bone": "thumb_02_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_thumb_03",
+      "bone": "thumb_03_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_index_01",
+      "bone": "index_01_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_index_02",
+      "bone": "index_02_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_index_03",
+      "bone": "index_03_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_middle_01",
+      "bone": "middle_01_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_middle_02",
+      "bone": "middle_02_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_middle_03",
+      "bone": "middle_03_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_ring_01",
+      "bone": "ring_01_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_ring_02",
+      "bone": "ring_02_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_ring_03",
+      "bone": "ring_03_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_pinky_01",
+      "bone": "pinky_01_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_pinky_02",
+      "bone": "pinky_02_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_pinky_03",
+      "bone": "pinky_03_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_wrist",
+      "bone": "hand_r",
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "limit_deg": 25,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_01",
+      "bone": "spine_01",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_02",
+      "bone": "spine_02",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_03",
+      "bone": "spine_03",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_04",
+      "bone": "spine_04",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_05",
+      "bone": "spine_05",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_clavicle",
+      "bone": "clavicle_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_upper_arm",
+      "bone": "upperarm_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_elbow",
+      "bone": "lowerarm_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_clavicle",
+      "bone": "clavicle_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_upper_arm",
+      "bone": "upperarm_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_elbow",
+      "bone": "lowerarm_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "neck_lower",
+      "bone": "neck_01",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "neck_upper",
+      "bone": "neck_02",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "head",
+      "bone": "head",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_hip",
+      "bone": "thigh_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_knee",
+      "bone": "calf_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ankle",
+      "bone": "foot_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_toes",
+      "bone": "ball_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_hip",
+      "bone": "thigh_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_knee",
+      "bone": "calf_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_ankle",
+      "bone": "foot_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_toes",
+      "bone": "ball_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "pelvis",
+      "bone": "pelvis",
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    }
+  ]
+}

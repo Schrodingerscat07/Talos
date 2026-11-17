@@ -1,0 +1,105 @@
+{
+  "format": "talos-motor-map/1.0",
+  "body_component": "Body",
+  "channels": [
+    {
+      "name": "left_hip",
+      "bone": "thigh_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_knee",
+      "bone": "calf_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ankle",
+      "bone": "foot_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_toes",
+      "bone": "ball_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_hip",
+      "bone": "thigh_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_knee",
+      "bone": "calf_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_ankle",
+      "bone": "foot_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_toes",
+      "bone": "ball_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "pelvis",
+      "bone": "pelvis",
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    }
+  ]
+}

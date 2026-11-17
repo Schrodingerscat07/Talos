@@ -1,0 +1,160 @@
+{
+  "format": "talos-motor-map/1.0",
+  "body_component": "Body",
+  "channels": [
+    {
+      "name": "spine_01",
+      "bone": "spine_01",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_02",
+      "bone": "spine_02",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_03",
+      "bone": "spine_03",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_04",
+      "bone": "spine_04",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "spine_05",
+      "bone": "spine_05",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_clavicle",
+      "bone": "clavicle_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_upper_arm",
+      "bone": "upperarm_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_elbow",
+      "bone": "lowerarm_l",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_clavicle",
+      "bone": "clavicle_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_upper_arm",
+      "bone": "upperarm_r",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "right_elbow",
+      "bone": "lowerarm_r",
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "neck_lower",
+      "bone": "neck_01",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "neck_upper",
+      "bone": "neck_02",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "head",
+      "bone": "head",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    }
+  ]
+}
