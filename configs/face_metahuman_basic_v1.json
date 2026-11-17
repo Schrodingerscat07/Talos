@@ -1,0 +1,9 @@
+{
+  "format": "talos-face-map/1.0",
+  "component": "Face",
+  "channels": [
+    {"name": "blink_left", "curve": "CTRL_expressions_eyeBlinkL"},
+    {"name": "blink_right", "curve": "CTRL_expressions_eyeBlinkR"},
+    {"name": "jaw_open", "curve": "CTRL_expressions_jawOpen"}
+  ]
+}

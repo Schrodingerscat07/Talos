@@ -10,6 +10,9 @@ The isolated harness mounts external Content for loading and saves generated con
 | --- | --- | --- |
 | GET /v1/health | none | Protocol, readiness and environment specification |
 | GET /v1/spec | none | Current configuration, sensor/control availability and reset scope |
+| GET /v1/rig | none | Privileged read-only skeletal component/bone/morph inventory; not verified motor capabilities |
+| GET /v1/motor | none | Opt-in motor readiness, mapping and privileged evaluated joint feedback |
+| POST /v1/motor/step | Versioned motor command | One atomic bounded pose update; only available in motor instances |
 | POST /v1/reset | `{"seed":42}` | Initial observation; fresh episode UUID and step index 0 |
 | GET /v1/observe | none | Current observation without a body action or step advance |
 | GET /v1/overview | none | Privileged 640×480 world overview; no step advance |
@@ -19,6 +22,12 @@ The isolated harness mounts external Content for loading and saves generated con
 Poll health/spec until `ready` is true. A spawned process or listening port does not establish asset/animation readiness. Missing configured avatar/body/clip compatibility prevents usable reset/step operations.
 
 ## Actions, timing and reset
+
+The opt-in M1a motor adapter has a separate command contract documented in
+[MOTOR_CONTROL.md](MOTOR_CONTROL.md). Its frozen-pose diagnostic exclusively
+owns the instance action clock; `/v1/step` is rejected there. Without a motor
+map, existing navigation semantics below are unchanged. Motor measurements
+remain privileged diagnostics, not automatic policy inputs.
 
 Seeds are integers in `[0,2147483647]`. Actions have exactly four finite JSON numbers in `[-1,1]`; booleans are invalid. Forward/strafe use local axes and the combined translation vector is clamped to unit magnitude. Positive turn increases Unreal yaw; positive look increases pitch. Pitch is clamped to `[-70,70]` degrees.
 

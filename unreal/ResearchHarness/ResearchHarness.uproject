@@ -4,10 +4,22 @@
   "Category": "",
   "Description": "",
   "Plugins": [
-    {"Name": "PythonScriptPlugin", "Enabled": true},
-    {"Name": "IKRig", "Enabled": true},
-    {"Name": "ModelContextProtocol", "Enabled": true},
-    {"Name": "EditorToolset", "Enabled": true},
+    {
+      "Name": "PythonScriptPlugin",
+      "Enabled": true
+    },
+    {
+      "Name": "IKRig",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelContextProtocol",
+      "Enabled": true
+    },
+    {
+      "Name": "EditorToolset",
+      "Enabled": true
+    },
     {
       "Name": "ModelingToolsEditorMode",
       "Enabled": true,
@@ -22,7 +34,8 @@
         "Win64",
         "Linux",
         "Mac"
-      ]
+      ],
+      "Optional": true
     },
     {
       "Name": "MetaHumanCalibrationDiagnostics",
@@ -31,7 +44,8 @@
         "Win64",
         "Linux",
         "Mac"
-      ]
+      ],
+      "Optional": true
     },
     {
       "Name": "MetaHumanCalibrationProcessing",
@@ -40,11 +54,13 @@
         "Win64",
         "Linux",
         "Mac"
-      ]
+      ],
+      "Optional": true
     },
     {
       "Name": "MetaHumanCoreTech",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanCoreML",
@@ -54,31 +70,38 @@
         "IOS",
         "TVOS",
         "VisionOS"
-      ]
+      ],
+      "Optional": true
     },
     {
       "Name": "MetaHumanCharacter",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanCharacterUAF",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanCrowd",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanGenerator",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanLiveLink",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanRuntime",
-      "Enabled": true
+      "Enabled": true,
+      "Optional": true
     },
     {
       "Name": "MetaHumanDepthProcessing",
@@ -87,7 +110,8 @@
         "Win64",
         "Mac",
         "Linux"
-      ]
+      ],
+      "Optional": true
     },
     {
       "Enabled": true,

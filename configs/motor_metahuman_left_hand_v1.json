@@ -1,0 +1,182 @@
+{
+  "format": "talos-motor-map/1.0",
+  "body_component": "Body",
+  "channels": [
+    {
+      "name": "left_thumb_01",
+      "bone": "thumb_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_thumb_02",
+      "bone": "thumb_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_thumb_03",
+      "bone": "thumb_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_index_01",
+      "bone": "index_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_index_02",
+      "bone": "index_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_index_03",
+      "bone": "index_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_middle_01",
+      "bone": "middle_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_middle_02",
+      "bone": "middle_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_middle_03",
+      "bone": "middle_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ring_01",
+      "bone": "ring_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ring_02",
+      "bone": "ring_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_ring_03",
+      "bone": "ring_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_pinky_01",
+      "bone": "pinky_01_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_pinky_02",
+      "bone": "pinky_02_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_pinky_03",
+      "bone": "pinky_03_l",
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "limit_deg": 15,
+      "rate_deg_s": 120
+    },
+    {
+      "name": "left_wrist",
+      "bone": "hand_l",
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "limit_deg": 25,
+      "rate_deg_s": 120
+    }
+  ]
+}

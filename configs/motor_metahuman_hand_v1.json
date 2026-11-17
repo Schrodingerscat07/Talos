@@ -1,0 +1,8 @@
+{
+  "format": "talos-motor-map/1.0",
+  "body_component": "Body",
+  "channels": [
+    {"name": "left_index_proximal", "bone": "index_01_l", "axis": [0, 0, 1], "limit_deg": 30, "rate_deg_s": 120},
+    {"name": "left_wrist", "bone": "hand_l", "axis": [1, 0, 0], "limit_deg": 25, "rate_deg_s": 120}
+  ]
+}

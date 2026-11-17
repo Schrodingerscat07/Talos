@@ -55,7 +55,7 @@ class ProfileTests(unittest.TestCase):
             machine=root/'machine.json';machine.write_text(json.dumps({'format':'erl-machine/1.0','engine_root':str(root/'engine'),'content_roots':{'custom':'content'}}))
             first,_=resolve(file,machine);second,_=resolve(file,machine)
             self.assertEqual(encoded(first),encoded(second));self.assertEqual(fingerprint(first),fingerprint(second))
-            self.assertNotIn('directory',p['mounts'][0]);self.assertEqual(first['mounts'][0]['directory'],(root/'content').as_posix())
+            self.assertNotIn('directory',p['mounts'][0]);self.assertEqual(first['mounts'][0]['directory'],(root/'content').resolve().as_posix())
             self.assertEqual(package_file('/Game/Robot/SK_Robot.SK_Robot',first),root/'content/Robot/SK_Robot.uasset')
 
     def test_long_recording_has_bounded_preview_and_complete_verifiable_log(self):

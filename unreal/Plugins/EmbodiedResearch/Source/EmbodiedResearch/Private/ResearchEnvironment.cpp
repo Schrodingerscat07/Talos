@@ -1,4 +1,6 @@
 #include "ResearchEnvironment.h"
+#include "ResearchMotorAnim.h"
+#include "ResearchFaceAnim.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
@@ -7,6 +9,8 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "GameFramework/MovementComponent.h"
 #include "Engine/SkeletalMesh.h"
+#include "Animation/MorphTarget.h"
+#include "Animation/AnimInstance.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInterface.h"
 #include "Components/PointLightComponent.h"
@@ -198,6 +202,8 @@ void AResearchEnvironment::BeginPlay()
     }
     if (!bAvatarLoaded) UE_LOG(LogTemp, Error, TEXT("ERL: avatar failed to load: %s"), *AvatarPath);
     SetupAnimation();
+    SetupMotor();
+    SetupFace();
     if(Profile.bProvided) ObserverEye->PostProcessSettings.AutoExposureBias=Profile.ObserverExposure;
     if (bRGB)
     {
@@ -237,9 +243,9 @@ void AResearchEnvironment::BeginPlay()
         {FString::Printf(TEXT("(Port=%d,BindAddress=127.0.0.1)"), Port)}, GEngineIni);
     Router = FHttpServerModule::Get().GetHttpRouter(Port, true);
     if (!Router) return;
-    for (const FString Op : {TEXT("health"),TEXT("spec"),TEXT("observe"),TEXT("overview"),TEXT("layout"),TEXT("reset"),TEXT("step")})
+    for (const FString Op : {TEXT("control"),TEXT("control/step"),TEXT("health"),TEXT("spec"),TEXT("rig"),TEXT("motor"),TEXT("motor/step"),TEXT("face"),TEXT("face/step"),TEXT("observe"),TEXT("overview"),TEXT("layout"),TEXT("reset"),TEXT("step")})
     {
-        const auto Verb = (Op == TEXT("reset") || Op == TEXT("step")) ? EHttpServerRequestVerbs::VERB_POST : EHttpServerRequestVerbs::VERB_GET;
+        const auto Verb = (Op == TEXT("control/step") || Op == TEXT("reset") || Op == TEXT("step") || Op == TEXT("motor/step") || Op == TEXT("face/step")) ? EHttpServerRequestVerbs::VERB_POST : EHttpServerRequestVerbs::VERB_GET;
         Routes.Add(Router->BindRoute(FHttpPath(TEXT("/v1/") + Op), Verb,
             FHttpRequestHandler::CreateLambda([Weak = TWeakObjectPtr<AResearchEnvironment>(this), Op](const FHttpServerRequest& Request, const FHttpResultCallback& Complete)
             {
@@ -249,6 +255,52 @@ void AResearchEnvironment::BeginPlay()
     }
     FHttpServerModule::Get().StartAllListeners();
     UE_LOG(LogTemp, Display, TEXT("ERL_READY port=%d avatar_loaded=%d rgb=%d"), Port, bAvatarLoaded, bRGB);
+}
+
+TSharedRef<FJsonObject> AResearchEnvironment::DescribeRig() const
+{
+    auto Result = MakeShared<FJsonObject>();
+    Result->SetStringField(TEXT("protocol"), TEXT("erl/1.0"));
+    Result->SetStringField(TEXT("format"), TEXT("talos-rig-inventory/1.0"));
+    Result->SetStringField(TEXT("scope"), TEXT("privileged_read_only_inventory_not_verified_motor_capabilities"));
+    Result->SetBoolField(TEXT("avatar_loaded"), bAvatarLoaded);
+    Result->SetStringField(TEXT("avatar"), AvatarPath);
+    TArray<TSharedPtr<FJsonValue>> Components;
+    if (Avatar)
+    {
+        TArray<USkeletalMeshComponent*> Meshes;
+        Avatar->GetComponents(Meshes);
+        Meshes.Sort([](const USkeletalMeshComponent& A, const USkeletalMeshComponent& B) { return A.GetName() < B.GetName(); });
+        for (const auto* Component : Meshes)
+        {
+            auto Item = MakeShared<FJsonObject>();
+            Item->SetStringField(TEXT("component"), Component->GetName());
+            Item->SetBoolField(TEXT("selected_locomotion_body"), Component == AnimatedBody);
+            Item->SetStringField(TEXT("anim_instance_class"), Component->GetAnimInstance() ? Component->GetAnimInstance()->GetClass()->GetPathName() : TEXT(""));
+            auto* Mesh = Component->GetSkeletalMeshAsset();
+            Item->SetStringField(TEXT("mesh"), Mesh ? Mesh->GetPathName() : TEXT(""));
+            TArray<TSharedPtr<FJsonValue>> Bones, Morphs;
+            if (Mesh)
+            {
+                const auto& Ref = Mesh->GetRefSkeleton();
+                for (int32 Index = 0; Index < Ref.GetNum(); ++Index)
+                {
+                    auto Bone = MakeShared<FJsonObject>();
+                    Bone->SetStringField(TEXT("name"), Ref.GetBoneName(Index).ToString());
+                    Bone->SetNumberField(TEXT("index"), Index);
+                    Bone->SetNumberField(TEXT("parent_index"), Ref.GetParentIndex(Index));
+                    Bones.Add(MakeShared<FJsonValueObject>(Bone));
+                }
+                for (const auto& Morph : Mesh->GetMorphTargets())
+                    if (Morph) Morphs.Add(MakeShared<FJsonValueString>(Morph->GetName()));
+            }
+            Item->SetArrayField(TEXT("bones"), Bones);
+            Item->SetArrayField(TEXT("morph_targets"), Morphs);
+            Components.Add(MakeShared<FJsonValueObject>(Item));
+        }
+    }
+    Result->SetArrayField(TEXT("components"), Components);
+    return Result;
 }
 
 void AResearchEnvironment::ResetState(int32 InSeed)
@@ -265,6 +317,8 @@ void AResearchEnvironment::ResetState(int32 InSeed)
     LastHitActor.Empty();
     Episode = FGuid::NewGuid().ToString(EGuidFormats::DigitsWithHyphensLower);
     GaitPhase=0;
+    if(MotorAnim) for(auto& C:MotorAnim->Channels) C.Degrees=0;
+    if(FaceAnim) for(auto& C:FaceAnim->Channels) C.Value=0;
     UpdateAnimation();
 }
 
@@ -276,6 +330,8 @@ TSharedRef<FJsonObject> AResearchEnvironment::Describe() const
     if(WorldName==TEXT("layout") || WorldName==TEXT("map")) D->SetStringField(TEXT("environment"),TEXT("unreal_configurable_")+WorldName+TEXT("_v1"));
     if(Profile.bProvided) D->SetObjectField(TEXT("configuration"),Profile.Document.ToSharedRef());
     D->SetStringField(TEXT("profile_id"),Profile.bProvided ? Profile.Id : TEXT("legacy_cli"));
+    D->SetObjectField(TEXT("motor"),DescribeMotor());
+    D->SetObjectField(TEXT("face"),DescribeFace());
     D->SetStringField(TEXT("reset_scope"),WorldName==TEXT("map") ? TEXT("avatar_only_static_map_required_mutable_world_needs_reset_adapter") : WorldName==TEXT("layout") ? TEXT("avatar_only_static_layout") : TEXT("avatar_and_reference_seeded_obstacle"));
     D->SetStringField(TEXT("animation"),AnimationState==TEXT("unavailable") ? TEXT("none") : TEXT("supplied_Epic_template_IK_retargeted_to_Bob_command_step_pose"));
     if(Profile.bProvided) D->SetStringField(TEXT("animation"),Profile.AnimationMode==TEXT("clips") ? TEXT("configured_supplied_animation_sequences") : Profile.AnimationMode);
@@ -284,6 +340,8 @@ TSharedRef<FJsonObject> AResearchEnvironment::Describe() const
     if(WorldName==TEXT("layout") || WorldName==TEXT("map")) D->SetStringField(TEXT("world_scope"),TEXT("configurable_static_scene_no_task_or_manipulation_semantics"));
     D->SetBoolField(TEXT("ready"),bAvatarLoaded && (!Profile.bProvided || (AnimatedBody && AnimatedBody->GetSkeletalMeshAsset() && (Profile.AnimationMode!=TEXT("clips") || (Locomotion.Num()==5 && !Locomotion.Contains(nullptr))))));
     D->SetStringField(TEXT("engine_version"),FEngineVersion::Current().ToString());
+    if(bMotorRequested && (!MotorAnim || !MotorError.IsEmpty())) D->SetBoolField(TEXT("ready"),false);
+    if(bFaceRequested && (!FaceAnim || !FaceError.IsEmpty())) D->SetBoolField(TEXT("ready"),false);
     D->SetStringField(TEXT("timing"),TEXT("command_stepped_kinematics_not_physics_lockstep"));
     D->SetStringField(TEXT("units"),TEXT("centimeters_degrees_seconds"));
     D->SetNumberField(TEXT("step_seconds"),StepSeconds);
@@ -365,8 +423,26 @@ TSharedRef<FJsonObject> AResearchEnvironment::Observe()
     Debug->SetStringField(TEXT("last_hit_actor"),LastHitActor);
     Debug->SetStringField(TEXT("animation_state"),AnimationState);
     Debug->SetNumberField(TEXT("gait_phase_s"),GaitPhase);
+    if(bMotorRequested) Debug->SetObjectField(TEXT("motor"),DescribeMotor());
+    if(bFaceRequested) Debug->SetObjectField(TEXT("face"),DescribeFace());
     if (bRGB && ObserverImage)
     {
+        if(MotorAnim && MotorAnim->Channels.Num())
+        {
+            const bool bHandView=MotorAnim->Channels.Last().Bone.ToString().StartsWith(TEXT("hand_"));
+            const bool bLowerView=MotorAnim->Channels.Last().Bone==FName(TEXT("pelvis"));
+            const FVector Focus=bHandView ? AnimatedBody->GetBoneLocation(MotorAnim->Channels.Last().Bone) : GetActorLocation()+FVector(0,0,bLowerView ? -10 : 35);
+            const bool bRightHand=MotorAnim->Channels.Last().Bone.ToString().EndsWith(TEXT("_r"));
+            const FVector Camera=Focus+GetActorRotation().RotateVector(bHandView ? FVector(40,bRightHand ? 45 : -45,15) : (bLowerView ? FVector(340,-120,80) : FVector(220,-220,80)));
+            ObserverEye->SetWorldLocationAndRotation(Camera,(Focus-Camera).Rotation());
+            ObserverEye->FOVAngle=bHandView ? 35 : 45;
+        }
+        if(FaceAnim && ControlledFace && !MotorAnim)
+        {
+            const FVector Focus=ControlledFace->GetBoneLocation(TEXT("head"))+FVector(0,0,3);
+            const FVector Camera=Focus+GetActorRotation().RotateVector(FVector(65,-8,5));
+            ObserverEye->SetWorldLocationAndRotation(Camera,(Focus-Camera).Rotation());ObserverEye->FOVAngle=35;
+        }
         ObserverEye->CaptureScene();
         TArray<FColor> Pixels;
         if (ObserverImage->GameThread_GetRenderTargetResource()->ReadPixels(Pixels))
@@ -381,6 +457,28 @@ TSharedRef<FJsonObject> AResearchEnvironment::Observe()
             Debug->SetObjectField(TEXT("observer_rgb"),R);
         }
     }
+    if(bRGB && ObserverImage && MotorAnim && FaceAnim && ControlledFace)
+    {
+        const FTransform Before=ObserverEye->GetComponentTransform();const float FOV=ObserverEye->FOVAngle;
+        const TCHAR* Keys[]={TEXT("face_rgb"),TEXT("left_hand_rgb"),TEXT("right_hand_rgb")};
+        const FName Bones[]={TEXT("head"),TEXT("hand_l"),TEXT("hand_r")};
+        for(int32 I=0;I<3;++I)
+        {
+            const FVector Focus=(I==0 ? ControlledFace.Get() : AnimatedBody.Get())->GetBoneLocation(Bones[I])+FVector(0,0,I==0 ? 3 : -8);
+            const FVector Offset=I==0 ? FVector(65,-8,5) : FVector(55,I==1 ? -55 : 55,15);
+            const FVector Camera=Focus+GetActorRotation().RotateVector(Offset);
+            ObserverEye->SetWorldLocationAndRotation(Camera,(Focus-Camera).Rotation());ObserverEye->FOVAngle=I==0 ? 35 : 40;
+            ObserverEye->CaptureScene();TArray<FColor> Pixels;
+            if(ObserverImage->GameThread_GetRenderTargetResource()->ReadPixels(Pixels))
+            {
+                TArray64<uint8> PNG;FImageUtils::PNGCompressImageArray(640,480,Pixels,PNG);
+                auto RGB=MakeShared<FJsonObject>();RGB->SetStringField(TEXT("encoding"),TEXT("png_base64"));
+                RGB->SetNumberField(TEXT("width"),640);RGB->SetNumberField(TEXT("height"),480);
+                RGB->SetStringField(TEXT("data"),FBase64::Encode(PNG.GetData(),PNG.Num()));Debug->SetObjectField(Keys[I],RGB);
+            }
+        }
+        ObserverEye->SetWorldTransform(Before);ObserverEye->FOVAngle=FOV;
+    }
     D->SetObjectField(TEXT("privileged"),Debug);
     return D;
 }
@@ -391,6 +489,11 @@ bool AResearchEnvironment::Handle(const FHttpServerRequest& Request, const FHttp
     if (!Header || Header->Num()!=1 || (*Header)[0]!=Token) { Fail(Complete,401,TEXT("unauthorized")); return true; }
     if (Op==TEXT("health") || Op==TEXT("spec")) { Reply(Complete,Describe()); return true; }
     if(bCapturePending) {Fail(Complete,503,TEXT("pose_capture_pending"));return true;}
+    if(Op==TEXT("rig")) {Reply(Complete,DescribeRig());return true;}
+    if(Op==TEXT("control")) {Reply(Complete,DescribeControl());return true;}
+    if(bMotorRequested && bFaceRequested && (Op==TEXT("motor/step") || Op==TEXT("face/step"))) {Fail(Complete,409,TEXT("combined_control_exclusively_owns_actions"));return true;}
+    if(Op==TEXT("motor")) {Reply(Complete,DescribeMotor());return true;}
+    if(Op==TEXT("face")) {Reply(Complete,DescribeFace());return true;}
     if(Op==TEXT("layout"))
     {
         if(WorldName!=TEXT("home") && WorldName!=TEXT("layout")) {Fail(Complete,400,TEXT("only_home_or_layout_geometry_can_be_exported"));return true;}
@@ -446,13 +549,33 @@ bool AResearchEnvironment::Handle(const FHttpServerRequest& Request, const FHttp
         Reply(Complete,D);return true;
     }
     if (Op==TEXT("observe")) { Reply(Complete,Observe()); return true; }
+    if(Op==TEXT("step") && bMotorRequested) {Fail(Complete,409,TEXT("motor_instance_exclusively_owns_actions"));return true;}
+    if(Op==TEXT("step") && bFaceRequested) {Fail(Complete,409,TEXT("face_instance_exclusively_owns_actions"));return true;}
     if(!bAvatarLoaded || (Profile.bProvided && (!AnimatedBody || !AnimatedBody->GetSkeletalMeshAsset() || (Profile.AnimationMode==TEXT("clips") && (Locomotion.Num()!=5 || Locomotion.Contains(nullptr))))))
     {Fail(Complete,503,TEXT("avatar_or_animation_not_ready"));return true;}
-    if (Request.Body.Num()>4096) { Fail(Complete,413,TEXT("body_too_large")); return true; }
+    if (Request.Body.Num()>(Op==TEXT("control/step") ? 32768 : 4096)) { Fail(Complete,413,TEXT("body_too_large")); return true; }
     FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Request.Body.GetData()),Request.Body.Num());
     TSharedPtr<FJsonObject> Data;
     if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(FString(Text.Length(),Text.Get())),Data) || !Data)
     { Fail(Complete,400,TEXT("invalid_json")); return true; }
+    if(Op==TEXT("control/step"))
+    {
+        FString Error;int32 Code;
+        if(!ApplyControl(Data,Error,Code)){Fail(Complete,Code,Error);return true;}
+        ReplyAfterPose(Complete);return true;
+    }
+    if(Op==TEXT("motor/step"))
+    {
+        FString Error; int32 Code;
+        if(!ApplyMotor(Data,Error,Code)) {Fail(Complete,Code,Error);return true;}
+        ReplyAfterPose(Complete); return true;
+    }
+    if(Op==TEXT("face/step"))
+    {
+        FString Error;int32 Code;
+        if(!ApplyFace(Data,Error,Code)){Fail(Complete,Code,Error);return true;}
+        ReplyAfterPose(Complete);return true;
+    }
     if (Op==TEXT("reset"))
     {
         double Value;

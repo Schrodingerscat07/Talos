@@ -1,0 +1,46 @@
+{
+  "created": "2026-10-25T12:02:22.165816+00:00",
+  "args": {
+    "backend": "talos",
+    "instances": "w1",
+    "mock_count": 2,
+    "task": "two",
+    "episodes": 150,
+    "max_episode_steps": 150,
+    "seed_offset": 150,
+    "noise_prob": 0.3,
+    "noise_std": 0.5,
+    "student": null,
+    "student_kind": "brain",
+    "beta": 0.3,
+    "layout": "L2",
+    "out": "data/multi_L2"
+  },
+  "image_hw": [
+    60,
+    80
+  ],
+  "teacher": "teacher_two_target_v1",
+  "task": "two",
+  "layout": "L2",
+  "targets_cm": [
+    [
+      330,
+      240
+    ],
+    [
+      330,
+      -240
+    ]
+  ],
+  "teacher_uses_privileged": [
+    "position_cm",
+    "obstacle_position_cm (reach) or fixed target positions (two)"
+  ],
+  "start_pose": "scripted pre-roll randomisation (talos_brain.env.preroll_actions)",
+  "seeds": [
+    150,
+    299
+  ],
+  "note": "Demonstrations from a privileged scripted teacher; record in any claim."
+}

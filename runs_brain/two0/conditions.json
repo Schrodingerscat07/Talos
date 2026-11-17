@@ -1,0 +1,31 @@
+{
+  "created": "2026-10-25T09:27:19.936601+00:00",
+  "method": "behaviour cloning (MSE on action mean), whole-episode BPTT",
+  "args": {
+    "data": [
+      "data/two0"
+    ],
+    "out": "runs_brain/two0",
+    "init": null,
+    "epochs": 20,
+    "batch_size": 16,
+    "lr": 0.0003,
+    "device": "cuda",
+    "threads": 0
+  },
+  "train_episodes": 360,
+  "val_episodes": 40,
+  "train_frames": 13104,
+  "image_hw": [
+    60,
+    80
+  ],
+  "demonstrations": "privileged scripted teacher (see collection.json in each data dir)",
+  "policy_inputs": [
+    "ego_rgb",
+    "heading",
+    "look_pitch",
+    "local_velocity",
+    "blocked"
+  ]
+}

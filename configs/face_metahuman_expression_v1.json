@@ -1,0 +1,70 @@
+{
+  "format": "talos-face-map/1.0",
+  "component": "Face",
+  "channels": [
+    {
+      "name": "eye_left_look_up",
+      "curve": "CTRL_expressions_eyeLookUpL"
+    },
+    {
+      "name": "eye_right_look_up",
+      "curve": "CTRL_expressions_eyeLookUpR"
+    },
+    {
+      "name": "eye_left_look_down",
+      "curve": "CTRL_expressions_eyeLookDownL"
+    },
+    {
+      "name": "eye_right_look_down",
+      "curve": "CTRL_expressions_eyeLookDownR"
+    },
+    {
+      "name": "eye_left_look_left",
+      "curve": "CTRL_expressions_eyeLookLeftL"
+    },
+    {
+      "name": "eye_right_look_left",
+      "curve": "CTRL_expressions_eyeLookLeftR"
+    },
+    {
+      "name": "eye_left_look_right",
+      "curve": "CTRL_expressions_eyeLookRightL"
+    },
+    {
+      "name": "eye_right_look_right",
+      "curve": "CTRL_expressions_eyeLookRightR"
+    },
+    {
+      "name": "brow_inner_raise_left",
+      "curve": "CTRL_expressions_browRaiseInL"
+    },
+    {
+      "name": "brow_inner_raise_right",
+      "curve": "CTRL_expressions_browRaiseInR"
+    },
+    {
+      "name": "brow_lower_left",
+      "curve": "CTRL_expressions_browDownL"
+    },
+    {
+      "name": "brow_lower_right",
+      "curve": "CTRL_expressions_browDownR"
+    },
+    {
+      "name": "lip_corner_pull_left",
+      "curve": "CTRL_expressions_mouthCornerPullL"
+    },
+    {
+      "name": "lip_corner_pull_right",
+      "curve": "CTRL_expressions_mouthCornerPullR"
+    },
+    {
+      "name": "cheek_puff_left",
+      "curve": "CTRL_expressions_mouthCheekBlowL"
+    },
+    {
+      "name": "cheek_puff_right",
+      "curve": "CTRL_expressions_mouthCheekBlowR"
+    }
+  ]
+}

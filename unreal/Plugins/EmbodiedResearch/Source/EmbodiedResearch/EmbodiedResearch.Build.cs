@@ -6,6 +6,6 @@ public class EmbodiedResearch : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicDependencyModuleNames.AddRange(new[] { "Core", "CoreUObject", "Engine", "HTTPServer", "Json" });
-        PrivateDependencyModuleNames.AddRange(new[] { "RenderCore", "RHI", "ImageWrapper", "Sockets" });
+        PrivateDependencyModuleNames.AddRange(new[] { "RenderCore", "RHI", "ImageWrapper", "Sockets", "AnimGraphRuntime" });
     }
 }
