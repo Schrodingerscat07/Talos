@@ -99,7 +99,7 @@ TSharedRef<FJsonObject> AResearchEnvironment::DescribeMotor() const
     D->SetArrayField(TEXT("channels"),Values); return D;
 }
 
-bool AResearchEnvironment::ApplyMotor(const TSharedPtr<FJsonObject>& Data, FString& Error, int32& Code)
+bool AResearchEnvironment::ApplyMotor(const TSharedPtr<FJsonObject>& Data, FString& Error, int32& Code, bool bValidateOnly)
 {
     Code=400; Error=TEXT("invalid_motor_command");
     if(!MotorAnim || !MotorError.IsEmpty()) {Code=503;Error=TEXT("motor_not_ready");return false;}
@@ -118,6 +118,7 @@ bool AResearchEnvironment::ApplyMotor(const TSharedPtr<FJsonObject>& Data, FStri
         Values.Add(V);
     }
     if(ExpectedEpisode!=Episode || ExpectedStep!=StepIndex || StepIndex>=MaxSteps) {Code=409;Error=TEXT("episode_or_step_conflict");return false;}
+    if(bValidateOnly)return true;
     // Commit only after all channels and ordering constraints have passed.
     for(int32 I=0;I<Values.Num();++I) MotorAnim->Channels[I].Degrees=Values[I];
     LastVelocity=FVector::ZeroVector; bBlocked=false; LastHitActor.Empty(); ++StepIndex;
