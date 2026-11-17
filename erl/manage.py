@@ -56,12 +56,18 @@ def inspect_inputs(profile,engine,allow_unprepared=False):
         if file is None or not file.is_file(): raise ConfigError(f'Asset file missing/unmounted: {asset} ({file})')
     return version
 
-def launch(profile_path,machine_path,name='default',port=8765,headless=False,offscreen=False,motor_map=None):
+def launch(profile_path,machine_path,name='default',port=8765,headless=False,offscreen=False,motor_map=None,face_map=None):
     if os.name!='nt': raise ConfigError('Launcher is Windows-only; source portability has not been validated')
     if type(port) is not int or not 1024<=port<=65535: raise ConfigError('Port must be 1024..65535')
     profile,engine=resolve(profile_path,machine_path)
     inspect_inputs(profile,engine)
     motor_document=None
+    face_document=None
+    if face_map is not None:
+        from .face import validate_mapping as validate_face
+        try:face_document=validate_face(read_json(face_map))
+        except ValueError as exc:raise ConfigError(str(exc)) from exc
+        if profile['avatar']['animation']['mode']!='clips':raise ConfigError('Face diagnostic requires compatible body clips')
     if motor_map is not None:
         from .motor import validate_mapping
         try: motor_document=validate_mapping(read_json(motor_map))
@@ -96,6 +102,9 @@ def launch(profile_path,machine_path,name='default',port=8765,headless=False,off
             motor_snapshot=directory/('motor-'+fingerprint(motor_document)+'.json')
             motor_snapshot.write_bytes(encoded(motor_document))
             args.append(f'-ERLMotorMap={motor_snapshot}')
+        if face_document is not None:
+            face_snapshot=directory/('face-'+fingerprint(face_document)+'.json')
+            face_snapshot.write_bytes(encoded(face_document));args.append(f'-ERLFaceMap={face_snapshot}')
         process=subprocess.Popen(args,cwd=ROOT,creationflags=0x08000000,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         info={'format':'erl-instance/1.0','name':name,'pid':process.pid,'port':port,'token_file':str(token_file),
               'profile_id':profile['id'],'profile_sha256':fingerprint(profile),'config_snapshot':str(snapshot),
@@ -104,6 +113,8 @@ def launch(profile_path,machine_path,name='default',port=8765,headless=False,off
         if motor_document is not None:
             info['motor_map_snapshot']=str(motor_snapshot)
             info['motor_map_sha256']=fingerprint(motor_document)
+        if face_document is not None:
+            info['face_map_snapshot']=str(face_snapshot);info['face_map_sha256']=fingerprint(face_document)
         try: write_json(directory/'state.json',info)
         except BaseException:
             process.terminate();raise
@@ -165,12 +176,13 @@ def main():
     p.add_argument('--instance',default='default');p.add_argument('--port',type=int,default=8765)
     p.add_argument('--headless',action='store_true');p.add_argument('--offscreen',action='store_true')
     p.add_argument('--motor-map',type=Path,help='Opt-in motor mapping; owns this instance action clock')
+    p.add_argument('--face-map',type=Path,help='Opt-in normalized facial curve mapping')
     p.add_argument('--full',action='store_true');p.add_argument('--output',type=Path)
     args=p.parse_args()
     if args.command=='stop': result=stop(args.instance)
     elif args.command=='status':
         s=state(args.instance);result={k:v for k,v in s.items() if k not in ('command','token_file')};result['process_alive']=process_alive(s['pid'])
-    elif args.command=='launch': result=launch(args.profile,args.machine,args.instance,args.port,args.headless,args.offscreen,args.motor_map)
+    elif args.command=='launch': result=launch(args.profile,args.machine,args.instance,args.port,args.headless,args.offscreen,args.motor_map,args.face_map)
     elif args.command=='export-layout':
         from copy import deepcopy
         from .config import validate

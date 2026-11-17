@@ -5,7 +5,8 @@ param(
     [ValidateRange(1024,65535)][int]$Port=8765,
     [switch]$Headless,
     [switch]$Offscreen,
-    [string]$MotorMap
+    [string]$MotorMap,
+    [string]$FaceMap
 )
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path -Parent $PSScriptRoot
@@ -15,6 +16,7 @@ try {
     if($Headless){$taskArguments+='--headless'}
     if($Offscreen){$taskArguments+='--offscreen'}
     if($MotorMap){$taskArguments+=@('--motor-map',$MotorMap)}
+    if($FaceMap){$taskArguments+=@('--face-map',$FaceMap)}
     & python @taskArguments
     if($LASTEXITCODE -ne 0){throw 'Instance launch failed'}
 } finally {Pop-Location}
