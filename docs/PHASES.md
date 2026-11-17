@@ -1,5 +1,60 @@
 # Phases and human verification gates
 
+2026-11-11 human decision: owner replied "pass" to the M3a combined-control
+replay `20261111T151237Z_e13cab57`. M3a accepted within its recorded scripted
+pose-control scope (55 body/hand bindings, 19 facial bindings with selected
+combined expressions). This does not accept physical balance/grasping, learned
+movement, other avatars or the remaining M3 features. Capture-time artifacts
+remain unchanged; this dated entry records subsequent human acceptance.
+
+2026-11-11: owner said "pass next", authorizing M3a after the accepted M2b
+lighting replay. Synchronized 55-channel body/hand and 19-channel facial
+control now has rendered evidence in `20261111T151237Z_e13cab57`:
+53 frames/265 images, 15 live checks and offline integrity passed. 36 Python
+tests passed. Human M3a review is pending; this does not complete all of M3.
+See COMBINED_CONTROL.md for API, source provenance, limits and walkthrough.
+
+2026-11-05 human decision: owner replied "pass" to the improved-lighting M2b
+replay `20261104T185232Z_04caa652`. M2b accepted within the recorded isolated
+facial-control scope. Residual eye shadow and uncalibrated gaze angles remain
+limitations; alternate avatars/LODs and integrated body/face control are not
+accepted by this decision. Historical capture-time artifacts stay unchanged.
+
+2026-11-05 owner requested improved lighting rather than accepting M2b.
+Camera-aligned front fills were built and recorded in
+`20261104T185232Z_04caa652` (209 frames, 418 images). Nine live checks and
+offline integrity passed; five facial Python tests passed. Brighter facial
+detail is visible, with residual eye-socket shadow. M2b human PASS remains
+pending; no subsequent control phase has started.
+
+2026-11-05 M2b checkpoint: 16 isolated gaze/brow/lip-corner/cheek bindings have
+rendered run `20261104T183311Z_d6e96d81` (209 frames, 418 images), nine live
+checks and offline integrity passed. Five facial Python tests passed. Human
+review pending; shadowed horizontal gaze, alternate views/LODs and combined
+body/face control remain unverified. No human acceptance is inferred.
+
+2026-11-04 human decision: owner replied "pass" to M2a facial replay
+`20261104T135916Z_8185e4fc` (independent left/right blinks and jaw opening).
+M2a accepted within its recorded diagnostic scope. Dark facial lighting and
+unverified side views/alternate LODs remain limitations. Remaining expressions,
+gaze and integrated body/face control are not covered by this acceptance.
+
+2026-11-04 human decision: owner replied "pass" to M1d lower-body run
+`20261104T062514Z_75733614`. M1d accepted within its diagnostic pose-control
+limits. Proceeding to M2a independent blinks and jaw; facial review is pending.
+
+2026-11-04 human decision: owner replied "ok proceed pass" to M1c upper-body
+run `20261104T060427Z_d4c5cd80`. M1c accepted. Proceeding to M1d lower-body
+pose controls; physical balance/locomotion and M1d human review remain pending.
+
+2026-11-04 human decision: owner replied "pass move to other details" to M1b.
+Both recorded hand sweeps are accepted. Proceeding to M1c isolated upper-body
+joint control; its human review remains pending.
+
+2026-10-30 human decision: owner replied "pass" to the rendered M1a finger/wrist
+demonstration (`20261029T201927Z_77f6e55f`). M1a is accepted. Proceeding to M1b
+individual finger-joint sweeps on both hands; M1b human review is pending.
+
 ## Current motor-control increment
 
 On 2026-10-29 the owner requested detailed body, individual-finger and facial
@@ -13,7 +68,8 @@ is not inferred from this new work request.
 2026-10-30: the owner explicitly authorized proceeding from M0 with a reusable
 mapping for future MetaHumans. M1a (left index proximal joint and wrist) now has
 rendered automated evidence and a recorded human walkthrough. Its human visual
-PASS remains pending; full hands/body/face have not been verified.
+PASS was subsequently supplied by the owner (see the decision above);
+full hands/body/face require their own verification.
 
 Each phase produces runnable artifacts, automated evidence, known limitations, a human walkthrough, and an explicit pass/fail decision. Automated checks alone never approve a phase. Later features must not begin until the human accepts the preceding gate. Passing a gate reduces risk; it does not guarantee that later integration cannot expose problems. New failures reopen affected gates.
 
