@@ -44,7 +44,7 @@ def checks(client, motor):
     bad = deepcopy(base); bad['expected_step'] = 1; rejected(bad, 409)
     motor.reset()
     base.update(episode_id=client.episode, expected_step=client.index)
-    bad = deepcopy(base); bad['targets_deg'][key] = 30; rejected(bad, 400)
+    bad = deepcopy(base); bad['targets_deg'][key] = motor.mapping['channels'][0]['limit_deg']; rejected(bad, 400)
     try:
         client.step(Action())
     except ProtocolError as exc:
@@ -86,20 +86,27 @@ input{width:100%;margin:20px 0}table{width:100%;border-collapse:collapse}td,th{t
 function draw(){const f=frames[Number(slider.value)];document.querySelector('#frame').src=f.image;document.querySelector('#caption').textContent=`${f.label} · frame ${f.step}`;
 const rows=document.querySelector('#values');rows.replaceChildren();for(const c of f.channels){const tr=document.createElement('tr');for(const v of [c.name,c.requested_deg.toFixed(1)+'°',c.measured_axis_delta_deg.toFixed(1)+'°']){const td=document.createElement('td');td.textContent=v;tr.append(td)}rows.append(tr)}}
 let timer;slider.oninput=draw;document.querySelector('#play').onclick=()=>{if(timer){clearInterval(timer);timer=null;document.querySelector('#play').textContent='Play'}else{document.querySelector('#play').textContent='Pause';timer=setInterval(()=>{slider.value=(Number(slider.value)+1)%frames.length;draw()},180)}};draw();</script></html>'''
-    (path/'report.html').write_text(template.replace('DATA', data), encoding='utf-8')
+    upper=frames and any(c['bone']=='head' for c in frames[0]['channels'])
+    lower=frames and any(c['bone']=='pelvis' for c in frames[0]['channels'])
+    stage='M1d' if lower else ('M1c' if upper else ('M1b' if frames and len(frames[0]['channels'])>2 else 'M1a'))
+    if lower: template=template.replace('Finger & wrist control','Lower-body joint control').replace('Hand control','Lower-body control').replace('Unreal close-up of the controlled hand','Unreal full-body pose diagnostic').replace('Inspect finger direction, wrist deformation and neutral reset.', 'Inspect hips, knees, ankles, toes and neutral return. Foot contact and balance are not constrained in this pose test.')
+    if upper: template=template.replace('Finger & wrist control','Upper-body joint control').replace('Hand control','Upper-body control').replace('Unreal close-up of the controlled hand','Unreal view of the controlled avatar').replace('Inspect finger direction, wrist deformation and neutral reset.', 'Inspect shoulders, elbows, spine, neck, head and neutral reset.')
+    (path/'report.html').write_text(template.replace('M1a',stage).replace('DATA', data), encoding='utf-8')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--instance', default='bob-motor')
     parser.add_argument('--runs', type=Path, default=Path('runs/motor'))
+    parser.add_argument('--sweep-all', action='store_true', help='Isolate every configured channel then combine finger joints')
+    parser.add_argument('--combined-deg', type=float, default=10, help='Magnitude of the final combined pose sweep')
     args = parser.parse_args()
     client = client_for(args.instance)
     spec = client.spec()
     if not spec.get('ready') or not spec.get('rgb_available'):
         raise RuntimeError('A ready rendered motor instance is required')
     motor = MotorClient(client)
-    if [c['name'] for c in motor.mapping['channels']] != ['left_index_proximal', 'left_wrist']:
+    if not args.sweep_all and [c['name'] for c in motor.mapping['channels']] != ['left_index_proximal', 'left_wrist']:
         raise RuntimeError('This finite acceptance sequence requires the two-channel hand template')
     path = args.runs/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+'_'+uuid.uuid4().hex[:8])
     (path/'frames').mkdir(parents=True)
@@ -136,6 +143,15 @@ def main():
                     if abs(c['measured_axis_delta_deg']-c['requested_deg'])>1:
                         raise AssertionError(f"Pose mismatch: {c}")
             record(motor.reset(),None,'Neutral')
+            if args.sweep_all:
+                zero={c['name']:0 for c in motor.mapping['channels']}
+                for name in zero:
+                    for value in (10,0,-10,0):
+                        targets=dict(zero); targets[name]=value
+                        for _ in range(2): record(motor.step(targets),targets,name)
+                for value in (args.combined_deg,0,-args.combined_deg,0):
+                    targets={name:(0 if name.endswith('_wrist') else value) for name in zero}
+                    for _ in range(2): record(motor.step(targets),targets,'Combined configured joints')
             sequence=[]
             for v in [10,20,30,20,10,0,-10,-20,-30,-20,-10,0]:
                 sequence.extend([(v,0,'Index finger')]*3)
@@ -143,7 +159,7 @@ def main():
                 sequence.extend([(0,v,'Wrist')]*3)
             for v in [10,20,10,0]:
                 sequence.extend([(v,v,'Combined')]*3)
-            for finger,wrist,label in sequence:
+            for finger,wrist,label in ([] if args.sweep_all else sequence):
                 targets={'left_index_proximal':finger,'left_wrist':wrist}
                 record(motor.step(targets),targets,label)
         manifest['status']='completed'
